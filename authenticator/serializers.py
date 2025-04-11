@@ -1,3 +1,4 @@
+from django.utils.crypto import get_random_string
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -25,7 +26,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
         # Set a default password if none is provided
         if 'password' not in validated_data or not validated_data['password']:
-            validated_data['password'] = User.objects.make_random_password()
+            validated_data['password'] = get_random_string(length=50)
         try:
 
             user = User.objects.create_user(**validated_data)

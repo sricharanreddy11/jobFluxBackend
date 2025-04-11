@@ -1,0 +1,50 @@
+class Constant:
+    GOOGLE_MAIL_PROVIDER = 'google_mail'
+    OUTLOOK_MAIL_PROVIDER = 'outlook_mail'
+    ZOHO_MAIL_PROVIDER = 'zoho_mail'
+    SENDGRID_MAIL_PROVIDER = 'sendgrid_mail'
+    PULL_MAIL = 'pull_mail'
+    OTHERS_MAIL_PROVIDER = 'others_mail'
+    ADD_SIGNATURE = 'add'
+    UPDATE_SIGNATURE = 'update'
+    DELETE_SIGNATURE = 'delete'
+    GOOGLE_TRACK_MAIL = 'mailer-daemon@googlemail.com'
+    OUTLOOK_TRACK_MAIL = 'MicrosoftExchange329e71ec88ae4615bbc36ab6ce41109e'
+    ZOHO_TRACK_MAIL = 'mailer-daemon@mail.zoho.com'
+    OTHER_BOUNCED_TRACK_MAILS = ["mailer-daemon", "daemon"]
+    BOUNCED = 'BOUNCED'
+    AUTO_BOUNCED = 'AUTO_BOUNCED'
+    FAILED = 'FAILED'
+    DELIVERED = 'DELIVERED'
+    READ = 'READ'
+    REPLY = 'REPLY'
+    CLICK = 'CLICK'
+    REPLIED = 'REPLIED'
+    RECEIVED = 'RECEIVED'
+    GOOGLE_CALENDER = 'google_calendar'
+    OUTLOOK_CALENDAR = 'outlook_calendar'
+    ATTACHMENT_ERROR_URL = ''
+    MICROSOFT_TEAMS = 'microsoft_teams_meeting'
+    GOOGLE_DRAFT_MESSAGE = 'DRAFT'
+    SEND_NOTIFICATION = 'send_notification'
+    GOOGLE_DATE_TIME_ORIGINAL_FORMAT = "%a, %d %b %Y %H:%M:%S %z"
+    GOOGLE_DATE_TIME_CONVERTED_FORMAT = "%Y-%m-%d %H:%M:%S%z"
+    IS_INLINE = "is_inline"
+    MAIL_STATUS = 'mail_status'
+    INBOX_FOLDER_NAME = 'inbox'
+    SENT_FOLDER_NAME = 'sent'
+    SENDING = "SENDING"
+    DRAFT = "DRAFT"
+    SCHEDULED = "SCHEDULED"
+    USER_ID = "user_id"
+    NOTIFICATION = "notification"
+    OUTLOOK_SUBSCRIPTION_LINK = "/me/messages"
+
+
+class TokenStatusConstants:
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    EXPIRED = "EXPIRED"
+    DELETED = "DELETED"
+    SUSPENDED = "SUSPENDED"
+    BLOCKED = "BLOCKED"

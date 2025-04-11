@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -34,7 +35,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 ENVIRONMENT = env('ENVIRONMENT')
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -59,6 +60,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
 
     'authenticator',
+    'notification',
 ]
 
 MIDDLEWARE = [
@@ -71,6 +73,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'authenticator.middleware.ThreadUserMiddleware',
 ]
 
 ROOT_URLCONF = 'jobflux_backend.urls'
@@ -171,36 +174,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = [
-
     'http://localhost:4200',
-
     'https://devtracker.up.railway.app',
-
     'https://notefluxai.vercel.app',
-
 ]
 
+SIMPLE_JWT = {
+              "ACCESS_TOKEN_LIFETIME": timedelta(days=10),
+              "UPDATE_LAST_LOGIN": True,
+              "TOKEN_OBTAIN_SERIALIZER": 'AdjAuthenticator.serializers.CustomTokenSerializer'
+              }
 
 
 CORS_ALLOW_CREDENTIALS = True
-
 CORS_ALLOW_HEADERS = list(default_headers)
 
 REST_FRAMEWORK = {
-
     'DEFAULT_AUTHENTICATION_CLASSES': (
-
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-
     ),
-
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 
 }
-
-
-
-
 
 AUTHENTICATION_BACKENDS = (
 
