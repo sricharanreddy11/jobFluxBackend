@@ -11,39 +11,62 @@ class UserFilterQuerySet(QuerySet):
     from ThreadContainer for all query operations.
     """
 
-    def _get_user_filter(self):
-        """Returns user filter kwargs or empty dict."""
+    def _get_current_user_filter(self):
+        """Internal method to get the current user filter as kwargs"""
         user_id = ThreadContainer.get_current_user_id()
-        return {'user_id': user_id} if user_id is not None else {}
-
-    def _apply_user_filter(self, queryset):
-        """Applies user filter only once."""
-        if not getattr(self, '_user_filter_applied', False):
-            user_filter = self._get_user_filter()
-            if user_filter:
-                queryset = queryset.filter(**user_filter)
-                setattr(queryset, '_user_filter_applied', True)
-        return queryset
+        if user_id is not None:
+            return {'user_id': user_id}
+        return {}
 
     def _clone(self):
-        """Ensure user filtering flag is preserved across clones."""
+        """Override _clone to ensure user filtering is preserved"""
         clone = super()._clone()
+        # Store original state
         if hasattr(self, '_user_filter_applied'):
             setattr(clone, '_user_filter_applied', getattr(self, '_user_filter_applied'))
         return clone
 
     def all(self):
-        return self._apply_user_filter(super().all())
+        """Override all() to filter by current user"""
+        queryset = super().all()
+        # Only apply user filter if not already applied
+        if not getattr(self, '_user_filter_applied', False):
+            user_filter = self._get_current_user_filter()
+            if user_filter:
+                queryset = super(UserFilterQuerySet, queryset).filter(**user_filter)
+                # Mark as filtered
+                setattr(queryset, '_user_filter_applied', True)
+        return queryset
 
     def filter(self, *args, **kwargs):
-        return self._apply_user_filter(super().filter(*args, **kwargs))
+        """Apply regular filter and then user filter"""
+        queryset = super().filter(*args, **kwargs)
+        # Only apply user filter if not already applied
+        if not getattr(self, '_user_filter_applied', False):
+            user_filter = self._get_current_user_filter()
+            if user_filter:
+                queryset = super(UserFilterQuerySet, queryset).filter(**user_filter)
+                # Mark as filtered
+                setattr(queryset, '_user_filter_applied', True)
+        return queryset
 
     def exclude(self, *args, **kwargs):
-        return self._apply_user_filter(super().exclude(*args, **kwargs))
+        """Apply regular exclude and then user filter"""
+        queryset = super().exclude(*args, **kwargs)
+        # Only apply user filter if not already applied
+        if not getattr(self, '_user_filter_applied', False):
+            user_filter = self._get_current_user_filter()
+            if user_filter:
+                queryset = super(UserFilterQuerySet, queryset).filter(**user_filter)
+                # Mark as filtered
+                setattr(queryset, '_user_filter_applied', True)
+        return queryset
 
     def get(self, *args, **kwargs):
-        if 'user_id' not in kwargs:
-            kwargs.update(self._get_user_filter())
+        """Override get to include user_id in the filter"""
+        user_id = ThreadContainer.get_current_user_id()
+        if user_id is not None and 'user_id' not in kwargs:
+            kwargs['user_id'] = user_id
         return super().get(*args, **kwargs)
 
 
