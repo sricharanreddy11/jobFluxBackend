@@ -61,6 +61,7 @@ INSTALLED_APPS = [
 
     'authenticator',
     'notification',
+    'core',
 ]
 
 MIDDLEWARE = [
