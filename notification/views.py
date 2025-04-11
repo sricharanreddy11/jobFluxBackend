@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.db.models import Prefetch
 from django_filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
