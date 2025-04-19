@@ -109,7 +109,21 @@ class Task(UserAbstractModel):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     due_date = models.DateTimeField(blank=True, null=True)
     reminder_time = models.DateTimeField(blank=True, null=True)
-    notes = models.TextField(blank=True, null=True)
 
     class Meta:
         db_table = 'task'
+
+
+class Note(UserAbstractModel):
+    title = models.CharField(default="Untitled", max_length=255)
+    content = models.TextField(default="", null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, related_name='notes', null=True, blank=True)
+    status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        db_table = 'note'

@@ -5,11 +5,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework.viewsets import GenericViewSet
 
-from .models import Company, Contact, ApplicationStatus, Application, Task
+from .models import Company, Contact, ApplicationStatus, Application, Task, Note
 from .serializers import (
     CompanySerializer, ContactSerializer, ApplicationStatusSerializer,
     ApplicationListSerializer, ApplicationDetailSerializer,
-    TaskSerializer, TaskDetailSerializer
+    TaskSerializer, TaskDetailSerializer, NoteSerializer
 )
 
 
@@ -74,3 +74,14 @@ class TaskAPI(GenericViewSet, CreateModelMixin, UpdateModelMixin, ListModelMixin
         if self.action == 'retrieve':
             return TaskDetailSerializer
         return TaskSerializer
+
+
+class NoteAPI(GenericViewSet, CreateModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin):
+    serializer_class = NoteSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'content']
+    ordering_fields = ['created_at']
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        return Note.objects.all()

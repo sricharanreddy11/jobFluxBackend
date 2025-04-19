@@ -37,7 +37,7 @@ class MailService(object):
         """
         return the redirect url based upon whether it is primary or secondary mail
         """
-        redirect_url = provider_obj.redirect_url.get('redirect_url', {}).get('marketing-mail')
+        redirect_url = provider_obj.redirect_url.get('redirect_url')
         return redirect_url
 
     @staticmethod

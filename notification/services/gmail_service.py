@@ -97,8 +97,7 @@ class Gmail(MailService):
            - str: The constructed authorization URL.
         """
         provider_obj = Provider.objects.get(name=Constant.GOOGLE_MAIL_PROVIDER)
-        is_primary = kwargs.get('is_primary')
-        auth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={provider_obj.client_id}&redirect_uri={self.get_redirect_url(provider_obj=provider_obj, is_primary=is_primary)}&response_type=code&scope={' '.join(provider_obj.scope.get('SCOPE'))}&access_type=offline&prompt=consent"
+        auth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={provider_obj.client_id}&redirect_uri={self.get_redirect_url(provider_obj=provider_obj)}&response_type=code&scope={' '.join(provider_obj.scope.get('SCOPE'))}&access_type=offline&prompt=consent"
         return auth_url
 
     def create_user(self, code, data, **kwargs):
@@ -113,11 +112,10 @@ class Gmail(MailService):
             Returns:
             - tuple: A boolean indicating success and a message.
         """
-        is_primary = kwargs.get('is_primary')
         provider_obj = Provider.objects.get(name=Constant.GOOGLE_MAIL_PROVIDER)
         token_obj = MailToken.objects.filter(provider=provider_obj.id,
                                              status=TokenStatusConstants.ACTIVE)
-        if is_primary and token_obj:
+        if token_obj:
             return False, "You are already connected to a primary mail"
         else:
             token_response = {
@@ -172,7 +170,7 @@ class Gmail(MailService):
                                 refresh_token=data.get('refresh_token'),
                                 expires_at=current_datetime + timedelta(seconds=data.get('expires_in')),
                                 status=TokenStatusConstants.ACTIVE,
-                                token_type="EMAIL", is_primary=True if is_primary else False,
+                                token_type="EMAIL",
                                 meta={'name': name},
                                 last_sync_time=datetime.now().timestamp(),
                                 last_connected_at=datetime.now(),
@@ -184,7 +182,7 @@ class Gmail(MailService):
                                                      refresh_token=data.get('refresh_token'),
                                                      expires_at=current_datetime + timedelta(
                                                          seconds=data.get('expires_in')),
-                                                     token_type="EMAIL", is_primary=True if is_primary else False,
+                                                     token_type="EMAIL",
                                                      meta={'name': name},
                                                      last_sync_time=datetime.now().timestamp(),
                                                      last_connected_at=datetime.now(),)

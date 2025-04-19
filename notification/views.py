@@ -1,9 +1,8 @@
 from django.db.models import Prefetch
-from django_filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin, CreateModelMixin, \
     DestroyModelMixin
 from rest_framework.pagination import PageNumberPagination
@@ -123,7 +122,7 @@ class TokenAPI(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMi
 
     def get_queryset(self):
         return MailToken.objects.filter(
-            status__in=[TokenStatusConstants.ACTIVE, TokenStatusConstants.INACTIVE, TokenStatusConstants.VERIFIED, TokenStatusConstants.PENDING]).prefetch_related(
+            status__in=[TokenStatusConstants.ACTIVE, TokenStatusConstants.INACTIVE]).prefetch_related(
             Prefetch('provider', queryset=Provider.objects.all()),
         )
 
@@ -150,11 +149,10 @@ class AuthorizeMail(APIView):
     def get(self, request):
 
         provider = request.GET.get("provider")
-        is_primary = request.GET.get('is_primary')
         try:
             executor = ProviderService(provider).get_provider_executor()
             url = executor().get_provider_url()
-            return Response(url)
+            return Response({"redirect_url": url})
         except Exception as e:
             return Response(str(e), status=400)
 

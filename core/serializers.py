@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Company, Contact, ApplicationStatus, Application, Task
+from .models import Company, Contact, ApplicationStatus, Application, Task, Note
 
 
 class CompanySerializer(serializers.ModelSerializer):
@@ -58,3 +58,10 @@ class TaskDetailSerializer(serializers.ModelSerializer):
         model = Task
         fields = '__all__'
         read_only_fields = ('user', 'created_at', 'updated_at')
+
+
+class NoteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Note
+        fields = '__all__'
