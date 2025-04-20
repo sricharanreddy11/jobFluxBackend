@@ -48,3 +48,4 @@ class TokenStatusConstants:
     DELETED = "DELETED"
     SUSPENDED = "SUSPENDED"
     BLOCKED = "BLOCKED"
+    DISCONNECTED = "DISCONNECTED"

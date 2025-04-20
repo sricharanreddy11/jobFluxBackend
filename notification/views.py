@@ -140,8 +140,23 @@ class TokenAPI(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMi
             if instance:
                 self.perform_destroy(instance)
                 return Response("Disconnected successfully")
+            return Response("Instance not found", status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response(str(e), status=404)
+
+
+    @action(detail=False, methods=['PATCH'], url_path='disconnect')
+    def disconnect(self, request, *args, **kwargs):
+        data = request.data
+        token_obj = MailToken.objects.filter(id=data.get('token_id')).first()
+        if token_obj:
+            try:
+                token_obj.status = TokenStatusConstants.DISCONNECTED
+                token_obj.save()
+                return Response("Disconnected successfully", status=status.HTTP_200_OK)
+            except Exception as e:
+                return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+        return Response("Instance not found", status=status.HTTP_404_NOT_FOUND)
 
 
 class AuthorizeMail(APIView):
