@@ -25,6 +25,7 @@ class MailSerializer(ModelSerializer):
 
 
 class ThreadSerializer(ModelSerializer):
+    latest_message = MailSerializer()
 
     class Meta:
         model = Thread

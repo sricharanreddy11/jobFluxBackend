@@ -39,13 +39,14 @@ class ThreadAPI(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelM
     def get_thread_details(self, request):
         threadId = request.GET.get('thread_id')
         email_queryset = Email.objects.exclude(mail_status='DRAFT').order_by('-mail_created_time')
-        thread_obj = Thread.objects.get(thread_id=threadId)
+        thread_obj = Thread.objects.get(id=threadId)
         qs = Thread.objects.prefetch_related(
-            Prefetch('emails', queryset=email_queryset),
-        update_qs = Email.objects.exclude(mail_status=Constant.BOUNCED).filter(thread_id=thread_obj.id))
-        updated_dict = {
-            "is_read": 1
-        }
+            Prefetch('emails', queryset=email_queryset)
+        )
+        # update_qs = Email.objects.exclude(mail_status=Constant.BOUNCED).filter(thread_id=thread_obj.id)
+        # updated_dict = {
+        #     "is_read": 1
+        # }
         ser = ThreadRetrieveSerializer(qs.filter(id=thread_obj.id), many=True)
         return Response(ser.data)
 
