@@ -27,25 +27,14 @@ class Contact(UserAbstractModel):
 
 
 class ApplicationStatus(UserAbstractModel):
-    STATUS_CHOICES = [
-        ('bookmarked', 'Bookmarked'),
-        ('applied', 'Applied'),
-        ('screening', 'Screening/Phone Interview'),
-        ('interview', 'Interview'),
-        ('technical', 'Technical Assessment'),
-        ('offer', 'Offer Received'),
-        ('accepted', 'Offer Accepted'),
-        ('rejected', 'Rejected'),
-        ('declined', 'Declined'),
-        ('withdrawn', 'Withdrawn'),
-    ]
 
-    name = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    name = models.CharField(max_length=50, null=True, blank=True)
     order = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         db_table = 'application_status'
         ordering = ['order']
+        unique_together = ('name', 'user_id')
 
 
 

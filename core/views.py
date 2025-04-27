@@ -6,6 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework.viewsets import GenericViewSet
 
+from .filters import ApplicationFilter
 from .models import Company, Contact, ApplicationStatus, Application, Task, Note
 from .serializers import (
     CompanySerializer, ContactSerializer, ApplicationStatusSerializer,
@@ -56,7 +57,7 @@ class ApplicationStatusAPI(GenericViewSet, CreateModelMixin, UpdateModelMixin, L
 
 class ApplicationAPI(GenericViewSet, CreateModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['company', 'status', 'remote', 'employment_type']
+    filterset_class = ApplicationFilter
     search_fields = ['title', 'company__name', 'location', 'description', 'notes']
     ordering_fields = ['title', 'application_date', 'company__name', 'created_at']
     ordering = ['-created_at']
