@@ -78,7 +78,7 @@ class OtherMail(MailService):
                         expires_at=datetime.now(), meta=smtp_imap_detail,
                         token_type="EMAIL",
                         status=TokenStatusConstants.ACTIVE,
-                        provider=provider, is_primary=True if is_primary else False,
+                        provider=provider,
                         last_sync_time=datetime.now().timestamp(),
                         last_connected_at=datetime.now(),
                     ),

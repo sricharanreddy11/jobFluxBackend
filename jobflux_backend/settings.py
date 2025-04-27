@@ -35,7 +35,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 ENVIRONMENT = env('ENVIRONMENT')
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '3e31-2405-201-c030-60c8-c095-b4cf-a877-44c4.ngrok-free.app']
 
 
 # Application definition
@@ -178,6 +178,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:4200',
     'https://devtracker.up.railway.app',
     'https://notefluxai.vercel.app',
+    'https://3e31-2405-201-c030-60c8-c095-b4cf-a877-44c4.ngrok-free.app'
 ]
 
 SIMPLE_JWT = {

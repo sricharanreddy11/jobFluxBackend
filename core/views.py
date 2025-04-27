@@ -1,6 +1,7 @@
 from rest_framework import filters
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin, \
+    RetrieveModelMixin
 from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework.viewsets import GenericViewSet
@@ -9,28 +10,38 @@ from .models import Company, Contact, ApplicationStatus, Application, Task, Note
 from .serializers import (
     CompanySerializer, ContactSerializer, ApplicationStatusSerializer,
     ApplicationListSerializer, ApplicationDetailSerializer,
-    TaskSerializer, TaskDetailSerializer, NoteSerializer
+    TaskSerializer, TaskDetailSerializer, NoteSerializer, CompanyDetailSerializer, ContactDetailSerializer
 )
 
 
-class CompanyAPI(GenericViewSet, CreateModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin):
+class CompanyAPI(GenericViewSet, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin):
     serializer_class = CompanySerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     search_fields = ['name', 'industry', 'description']
     ordering_fields = ['name', 'created_at']
     ordering = ['-created_at']
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return CompanySerializer
+        return CompanyDetailSerializer
+
     def get_queryset(self):
         return Company.objects.all()
 
 
-class ContactAPI(GenericViewSet, CreateModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin):
+class ContactAPI(GenericViewSet, CreateModelMixin,RetrieveModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin):
     serializer_class = ContactSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['company']
     search_fields = ['name', 'email', 'position', 'notes']
     ordering_fields = ['name', 'company__name', 'created_at']
     ordering = ['-created_at']
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ContactSerializer
+        return ContactDetailSerializer
 
     def get_queryset(self):
         return Contact.objects.all()

@@ -9,7 +9,6 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
-    company_name = serializers.ReadOnlyField(source='company.name')
 
     class Meta:
         model = Contact
@@ -39,6 +38,22 @@ class ApplicationDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Application
+        fields = '__all__'
+
+class ContactDetailSerializer(serializers.ModelSerializer):
+    company = CompanySerializer(read_only=True)
+    applications = ApplicationListSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Contact
+        fields = '__all__'
+
+class CompanyDetailSerializer(serializers.ModelSerializer):
+
+    contacts = ContactSerializer(many=True, read_only=True)
+    applications = ApplicationListSerializer(many=True, read_only=True)
+    class Meta:
+        model = Company
         fields = '__all__'
 
 
