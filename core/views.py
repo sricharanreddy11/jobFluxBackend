@@ -55,7 +55,7 @@ class ApplicationStatusAPI(GenericViewSet, CreateModelMixin, UpdateModelMixin, L
         return ApplicationStatus.objects.all()
 
 
-class ApplicationAPI(GenericViewSet, CreateModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin):
+class ApplicationAPI(GenericViewSet, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = ApplicationFilter
     search_fields = ['title', 'company__name', 'location', 'description', 'notes']

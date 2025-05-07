@@ -22,19 +22,21 @@ class ApplicationStatusSerializer(serializers.ModelSerializer):
 
 
 class ApplicationListSerializer(serializers.ModelSerializer):
-    company_name = serializers.ReadOnlyField(source='company.name')
-    status_display = serializers.ReadOnlyField(source='status.name')
+    company = CompanySerializer(read_only=True)
+    status = ApplicationStatusSerializer(read_only=True)
 
     class Meta:
         model = Application
-        fields = ['id', 'title', 'company', 'company_name', 'status', 'status_display',
+        fields = ['id', 'title', 'company', 'status',
                   'application_date', 'remote', 'location']
 
 
 class ApplicationDetailSerializer(serializers.ModelSerializer):
-    company = CompanySerializer(source='company', read_only=True)
-    contact = ContactSerializer(source='contact', read_only=True)
-    status_display = serializers.ReadOnlyField(source='status.name')
+    company = CompanySerializer(read_only=True)
+    contact = ContactSerializer(read_only=True)
+    status = ApplicationStatusSerializer(read_only=True)
+    company_id = serializers.IntegerField(write_only=True)
+    status_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Application
