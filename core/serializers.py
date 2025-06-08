@@ -44,6 +44,7 @@ class ApplicationDetailSerializer(serializers.ModelSerializer):
 
 class ContactDetailSerializer(serializers.ModelSerializer):
     company = CompanySerializer(read_only=True)
+    company_id = serializers.IntegerField(write_only=True)
     applications = ApplicationListSerializer(many=True, read_only=True)
 
     class Meta:
